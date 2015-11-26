@@ -19,13 +19,13 @@ class Agent{
     if (idToChase == 0) {
       Vdist=PVector.sub(b.posOld,this.pos);
     }else{
-      Vdist=PVector.sub(b.posOld,this.pos);
+      Vdist=PVector.sub(b.pos,this.pos);
     }
     
     //float distance=Vdist.mag();
     //Vdist.mult(f);
     Vdist.normalize();
-    Vdist.mult(f);
+    Vdist.mult(-f);
     
     // if(distance<10 || distance > 300){
     //   //Vdist.mult(-1);

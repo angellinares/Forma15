@@ -1,7 +1,7 @@
 
 ArrayList <Agent> agentList;
 int num=4;
-int r=350;
+int r=30;
 float f=10;
 
 void setup(){
@@ -24,7 +24,7 @@ void setup(){
 void draw(){
   fill(0,5);
   noStroke();
-  rect(0,0,width,height);
+  //rect(0,0,width,height);
   for(Agent a:agentList){
     a.render();
     a.chase();

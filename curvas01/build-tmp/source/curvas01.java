@@ -17,7 +17,7 @@ public class curvas01 extends PApplet {
 
 ArrayList <Agent> agentList;
 int num=4;
-int r=350;
+int r=30;
 float f=10;
 
 public void setup(){
@@ -40,7 +40,7 @@ public void setup(){
 public void draw(){
   fill(0,5);
   noStroke();
-  rect(0,0,width,height);
+  //rect(0,0,width,height);
   for(Agent a:agentList){
     a.render();
     a.chase();
@@ -76,13 +76,13 @@ class Agent{
     if (idToChase == 0) {
       Vdist=PVector.sub(b.posOld,this.pos);
     }else{
-      Vdist=PVector.sub(b.posOld,this.pos);
+      Vdist=PVector.sub(b.pos,this.pos);
     }
     
     //float distance=Vdist.mag();
     //Vdist.mult(f);
     Vdist.normalize();
-    Vdist.mult(f);
+    Vdist.mult(-f);
     
     // if(distance<10 || distance > 300){
     //   //Vdist.mult(-1);
