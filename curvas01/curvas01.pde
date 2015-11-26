@@ -1,11 +1,11 @@
 
 ArrayList <Agent> agentList;
-int num=5;
-int r=30;
-float f=0.1;
+int num=4;
+int r=350;
+float f=10;
 
 void setup(){
-  size(600,600);
+  size(900,900);
   smooth();
   frameRate(12);
   
@@ -26,9 +26,16 @@ void draw(){
   noStroke();
   rect(0,0,width,height);
   for(Agent a:agentList){
-    a.chase();
     a.render();
+    a.chase();
+    
   }
-  
-  
 }
+  
+void mousePressed() {
+  noLoop();
+}
+  
+  
+
+
