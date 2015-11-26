@@ -34,9 +34,7 @@ class Agent{
     this.pos.add(Vdist);
     stroke(255,50,50);
     line(this.pos.x,this.pos.y,this.pos.z, b.pos.x,b.pos.y, b.pos.z);
-  }
-  
-  
+  } 
   
   void render(){
     fill(255);

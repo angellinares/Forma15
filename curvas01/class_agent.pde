@@ -1,7 +1,7 @@
 class Agent{
   int id, idToChase;
-  PVector pos, posOld, Vdist;
-  PVector vel;
+  PVector pos, posOld, Vdist,vel;
+  Agent b;
   
   Agent(int _id, PVector _pos, PVector _vel){
     id=_id;
@@ -10,47 +10,45 @@ class Agent{
     posOld = pos;
   }
   
+  // Calculate vectors
   void chase(){
+
     // Identifying what agent to chase
     int idToChase=(this.id+1)%num;
-    Agent b=agentList.get(idToChase); // Sel. the agent to chase
-    println("idToChase_" + this.id + ": " +idToChase);
-
-    if (idToChase == 0) {
-      Vdist=PVector.sub(b.posOld,this.posOld);
-    }else{
-      Vdist=PVector.sub(b.posOld,this.posOld);
-    }
+    b = agentList.get(idToChase); // Sel. the agent to chase
     
+    Vdist=PVector.sub(b.posOld,this.posOld);
+      
     //float distance=Vdist.mag();
     //Vdist.mult(f);
     Vdist.normalize();
     Vdist.mult(-f);
     
-    // if(distance<10 || distance > 300){
-    //   //Vdist.mult(-1);
-    // }
-    this.posOld = this.pos;
-    this.pos.add(Vdist);
-    stroke(255,50,50);
-    
-    if (idToChase == 0) {
-      line(this.pos.x,this.pos.y,b.posOld.x,b.posOld.y);
-    }else{
-      line(this.pos.x,this.pos.y,b.pos.x,b.pos.y);
-    }
-
-    //Painting V
-    stroke(220,220,220);
-    line(this.pos.x, this.pos.y, this.pos.x+Vdist.x, this.pos.y+Vdist.y);
   }
   
-  
+  void update(){
+
+    posOld = new PVector (pos.x,pos.y,pos.z);
+    this.pos.add(Vdist);
+
+    println("posOld: "+posOld);
+    println("pos: "+pos);
+    println("////////////////////////////////////////");
+
+  }
   
   void render(){
     fill(255);
     noStroke();
-    ellipse(pos.x,pos.y,4,4);
+    ellipse(posOld.x,posOld.y,4,4);
+    stroke(255,50,50);
+    
+    line(this.posOld.x,this.posOld.y,b.posOld.x,b.posOld.y);
+    
+     
+    //Painting V
+    stroke(220,220,220);
+    line(this.posOld.x, this.posOld.y, this.posOld.x+Vdist.x, this.posOld.y+Vdist.y);
   }
   
 }

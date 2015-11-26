@@ -26,9 +26,13 @@ void draw(){
   fill(0,5);
   noStroke();
   //rect(0,0,width,height);
+  for(Agent a:agentList){   
+    a.chase();   
+  }
+
   for(Agent a:agentList){
-    
-    a.chase();
+
+    a.update();
     a.render();
     
   }

@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import peasy.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -15,6 +17,10 @@ import java.io.IOException;
 public class curvas3D01 extends PApplet {
 
 
+
+
+PeasyCam cam;
+
 PFont font1;
 ArrayList <Agent> agentList;
 int num=8;
@@ -24,28 +30,27 @@ boolean sw = true;
 
 public void setup(){
   
-  camera(280.0f, 100.0f, 680.0f, width/2, height/2, 0.0f,0.0f, 0.0f, 1.0f);
+
   
   frameRate(4);
   font1=createFont("Arial",24);
   agentList=new ArrayList<Agent>();
-  
-  for(int i=0;i<num;i++){
-    PVector position=new PVector(width/2+r*cos(2*PI*i/num),height/2+r*sin(2*PI*i/num),0);
-    PVector velocity=new PVector(0,0,0);
-    Agent a=new Agent(i,position, velocity);
-    //agentList.add(a);
-  }
+
+  // Adding peasyCam
+  cam = new PeasyCam(this, 600);
+  cam.setMinimumDistance(1);
+  cam.setMaximumDistance(2000);
+
   
   for(int i=0;i<num/2;i++){
-    PVector position=new PVector(width/2+r*cos(2*PI*(i)/num*2),width/2+r*sin(2*PI*(i)/num*2),0);
+    PVector position=new PVector(r*cos(2*PI*(i)/num*2),r*sin(2*PI*(i)/num*2),0);
     PVector velocity=new PVector(0,0,0);
     Agent a=new Agent(i,position, velocity);
     agentList.add(a);
   }
   
   for(int i=num-1;i>=num/2;i--){
-    PVector position=new PVector(width/2+r*cos(2*PI*i/num*2),width/2+r*sin(2*PI*i/num*2),200);
+    PVector position=new PVector(r*cos(2*PI*i/num*2),r*sin(2*PI*i/num*2),200);
     PVector velocity=new PVector(0,0,0);
     Agent a=new Agent(num/2+num-i-1,position, velocity);
     agentList.add(a);
@@ -54,9 +59,9 @@ public void setup(){
 }
 
 public void draw(){
-  fill(0,20);
+  
   noStroke();
-  //rect(0,0,width,height);
+  background(220);
   for(Agent a:agentList){
     a.chase();
     a.render();
@@ -65,16 +70,16 @@ public void draw(){
   
 }
 
-public void mousePressed() {
+// void mousePressed() {
   
-  sw = !sw;
+//   sw = !sw;
 
-  if (sw == false) {
-    noLoop();
-  }else{
-    loop();
-  }
-}
+//   if (sw == false) {
+//     noLoop();
+//   }else{
+//     loop();
+//   }
+// }
 class Agent{
   int id;
   PVector pos;
