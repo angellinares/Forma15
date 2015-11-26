@@ -3,6 +3,7 @@ ArrayList <Agent> agentList;
 int num=4;
 int r=30;
 float f=10;
+boolean sw = true;
 
 void setup(){
   size(900,900);
@@ -26,14 +27,22 @@ void draw(){
   noStroke();
   //rect(0,0,width,height);
   for(Agent a:agentList){
-    a.render();
+    
     a.chase();
+    a.render();
     
   }
 }
   
 void mousePressed() {
-  noLoop();
+  
+  sw = !sw;
+
+  if (sw == false) {
+    noLoop();
+  }else{
+    loop();
+  }
 }
   
   

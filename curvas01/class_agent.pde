@@ -1,5 +1,5 @@
 class Agent{
-  int id;
+  int id, idToChase;
   PVector pos, posOld, Vdist;
   PVector vel;
   
@@ -17,9 +17,9 @@ class Agent{
     println("idToChase_" + this.id + ": " +idToChase);
 
     if (idToChase == 0) {
-      Vdist=PVector.sub(b.posOld,this.pos);
+      Vdist=PVector.sub(b.posOld,this.posOld);
     }else{
-      Vdist=PVector.sub(b.pos,this.pos);
+      Vdist=PVector.sub(b.posOld,this.posOld);
     }
     
     //float distance=Vdist.mag();
@@ -33,7 +33,12 @@ class Agent{
     this.posOld = this.pos;
     this.pos.add(Vdist);
     stroke(255,50,50);
-    line(this.pos.x,this.pos.y,b.posOld.x,b.posOld.y);
+    
+    if (idToChase == 0) {
+      line(this.pos.x,this.pos.y,b.posOld.x,b.posOld.y);
+    }else{
+      line(this.pos.x,this.pos.y,b.pos.x,b.pos.y);
+    }
 
     //Painting V
     stroke(220,220,220);
