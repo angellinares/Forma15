@@ -46,7 +46,7 @@ class Agent{
     line(this.posOld.x,this.posOld.y,b.posOld.x,b.posOld.y);
     
      
-    //Painting V
+    //Painting Vector
     stroke(220,220,220);
     line(this.posOld.x, this.posOld.y, this.posOld.x+Vdist.x, this.posOld.y+Vdist.y);
   }

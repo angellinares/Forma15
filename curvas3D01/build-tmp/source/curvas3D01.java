@@ -19,56 +19,90 @@ public class curvas3D01 extends PApplet {
 
 
 
+ArrayList <Agent> agentList;
+ArrayList <Edge> edgeList;
+
 PeasyCam cam;
 
-PFont font1;
-ArrayList <Agent> agentList;
 int num=8;
 int r=200;
-float f=0.1f;
+float f=2;
 boolean sw = true;
+
+// Chasing list
+int[] orderList = {4,0,6,2,7,1,5,3};
 
 public void setup(){
   
 
-  
-  frameRate(4);
-  font1=createFont("Arial",24);
-  agentList=new ArrayList<Agent>();
+  // Initializing PeasyCam
+  cam = new PeasyCam(this,600);
+  cam.setMinimumDistance(50);
+  cam.setMaximumDistance(1500);
 
-  // Adding peasyCam
-  cam = new PeasyCam(this, 600);
-  cam.setMinimumDistance(1);
-  cam.setMaximumDistance(2000);
+  frameRate(12);
+  //smooth();
 
+  // Initializing Arraylists
+  agentList = new ArrayList<Agent>();
+  edgeList = new ArrayList<Edge>();
+
+  for(int i=0;i<num;i++){
+    float z = 0;
+
+    if (i>3) {
+      z = sqrt(2)*r;
+    }
+
+    int idChase = orderList[i];
+    PVector position=new PVector(r*cos(2*PI*i/num*2),r*sin(2*PI*i/num*2),z);
   
-  for(int i=0;i<num/2;i++){
-    PVector position=new PVector(r*cos(2*PI*(i)/num*2),r*sin(2*PI*(i)/num*2),0);
-    PVector velocity=new PVector(0,0,0);
-    Agent a=new Agent(i,position, velocity);
-    agentList.add(a);
-  }
-  
-  for(int i=num-1;i>=num/2;i--){
-    PVector position=new PVector(r*cos(2*PI*i/num*2),r*sin(2*PI*i/num*2),200);
-    PVector velocity=new PVector(0,0,0);
-    Agent a=new Agent(num/2+num-i-1,position, velocity);
+    Agent a=new Agent(i, idChase, position);
+
     agentList.add(a);
   }
     
 }
 
 public void draw(){
-  
-  noStroke();
-  background(220);
-  for(Agent a:agentList){
+
+  // Drawing background
+  background(20);
+
+  for(Agent a:agentList){   
     a.chase();
-    a.render();
   }
-  
-  
+
+  for(Agent a:agentList){
+
+    a.update();
+    a.render();
+    
+  }
+
+  for (Edge e : edgeList) {
+
+    e.render();
+
+  }
 }
+  
+
+public void keyPressed(){
+
+  if (key == 'r'){
+
+    sw = !sw;
+
+    if (sw == false) {
+      noLoop();
+    }else{
+
+      loop();
+    }
+  }
+}
+
 
 // void mousePressed() {
   
@@ -80,60 +114,87 @@ public void draw(){
 //     loop();
 //   }
 // }
-class Agent{
-  int id;
-  PVector pos;
-  PVector vel;
   
-  Agent(int _id, PVector _pos, PVector _vel){
+  
+
+
+class Agent{
+  int id, idToChase;
+  PVector pos, posOld, Vdist;
+  Agent b;
+  
+  Agent(int _id, int _idToChase, PVector _pos){
     id=_id;
     pos=_pos;
-    vel=_vel;
+    posOld = pos;
+    idToChase = _idToChase;
   }
   
-  public void chaseOld(){
-    int idToChase=(this.id+1)%num;
-    Agent b=agentList.get(idToChase);
-    PVector Vdist=PVector.sub(b.pos,this.pos);
-    float distance=Vdist.mag();
+  // Calculate vectors
+  public void chase(){
+
+    // Identifying what agent to chase
+    //int idToChase=(this.id+1)%num;
+
+    b = agentList.get(idToChase); // Sel. the agent to chase
+    
+    Vdist=PVector.sub(b.posOld,this.posOld);
+      
+    //float distance=Vdist.mag();
+    //Vdist.mult(f);
+    Vdist.normalize();
     Vdist.mult(f);
     
-    if(distance<10 || distance > 300){
-      //Vdist.mult(-1);
-    }
-    this.pos.add(Vdist);
-    stroke(255,50,50);
-    line(this.pos.x,this.pos.y,b.pos.x,b.pos.y);
   }
   
-  public void chase(){
-    int idToChase=(this.id+1)%num;
-    Agent b=agentList.get(idToChase);
-    PVector Vdist=PVector.sub(b.pos,this.pos);
-    float distance=Vdist.mag();
-    Vdist.mult(f);
- 
+  public void update(){
+
+    posOld = new PVector (pos.x,pos.y,pos.z);
     this.pos.add(Vdist);
-    stroke(255,50,50);
-    line(this.pos.x,this.pos.y,this.pos.z, b.pos.x,b.pos.y, b.pos.z);
+
+    // println("posOld: "+posOld);
+    // println("pos: "+pos);
+    // println("////////////////////////////////////////");
+
   }
-  
-  
   
   public void render(){
     fill(255);
     noStroke();
     pushMatrix();
-    translate(0,0,pos.z);
-    ellipse(pos.x,pos.y,4,4);
-   
-    textFont(font1);
-    text(id,pos.x,pos.y);
-     popMatrix();
+    translate(0, 0, posOld.z);
+    ellipse(posOld.x,posOld.y,4,4);
+    popMatrix();
+    stroke(255,50,50);
+    
+    // line(this.posOld.x,this.posOld.y,b.posOld.x,b.posOld.y);
+
+    Edge e = new Edge(new PVector(posOld.x,posOld.y,posOld.z),new PVector(b.posOld.x,b.posOld.y,b.posOld.z));
+    edgeList.add(e);
+     
+    //Painting Vector
+    stroke(220,220,220);
+    line(this.posOld.x, this.posOld.y, this.posOld.z, this.posOld.x+Vdist.x, this.posOld.y+Vdist.y, this.posOld.z+Vdist.z);
   }
   
 }
-  public void settings() {  size(600,600,P3D);  smooth(); }
+class Edge  {
+
+	PVector pos0, pos1;
+
+	Edge (PVector _pos0, PVector _pos1) {
+		pos0 = _pos0;
+		pos1 = _pos1;		
+	}
+
+	public void render(){
+		stroke (255);
+		line(pos0.x, pos0.y, pos0.z, pos1.x, pos1.y, pos1.z);
+
+	}
+
+}
+  public void settings() {  size(600,600,P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "curvas3D01" };
     if (passedArgs != null) {
